@@ -174,7 +174,6 @@ def ready_fb(_bpp=None, i=0, layer=0, _win=None):
     bpp = vi[6]
     bytepp = bpp//8
     if _bpp:
-      vi[6] = _bpp # 24 bit = BGR 888 mode
       #vi[8] = 0
       #vi[14] = 16
       try:
@@ -185,6 +184,7 @@ def ready_fb(_bpp=None, i=0, layer=0, _win=None):
       except:
         pass
     
+    vi[6] = 32
     if vi[8] == 0 : RGB = True
     #r_o, r_b, r_e = vi[8:11]
     #g_o, g_b, g_e = vi[11:14]
@@ -199,6 +199,8 @@ def ready_fb(_bpp=None, i=0, layer=0, _win=None):
     # smem_len      type type_aux, visual, xpanstep, ypanstep, ywrapstep, line_length, mmio_start, mmio_len, accel, capabilities, reserved[2]
     msize = fi[17] # = w*h*bpp//8
     ll, start = fi[-7:-5]
+    ll = fi[24]
+    start = fi[25]
     # bpp = vi[9]+vi[12]+vi[15]+vi[18]
     w, h = ll//bytepp, vi[1] # when screen is vertical, width becomes wrong. ll//3 is more accurate at such time.
     if _win and len(_win)==4: # virtual window settings
@@ -335,10 +337,12 @@ def show_img(img):
     mm.write(b.read(s))
 
 def _ready_gif(cut):
+  from PIL import Image
   dur = 1
   if cut.info.get('duration'):
     dur = cut.info['duration']/1000
-  cut = cut.convert('RGBA' if bpp == 32 else 'RGB').resize((vw,vh), ANTIALIAS)
+  # ,Image.BICUBIC
+  cut = cut.rotate(90, expand=1).convert('RGBA' if bpp == 32 else 'RGB').resize((vw,vh), ANTIALIAS)
   if not RGB:
     return cut.tobytes('raw', 'BGRA' if bpp == 32 else 'BGR'), dur
   return cut.tobytes(), dur
