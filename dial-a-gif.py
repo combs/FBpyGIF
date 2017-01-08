@@ -8,10 +8,14 @@ if version_info.major<3 :
 The minimum supported version is Python 3.2')
   exit(1)
 
-switches = SourceFileLoader("switches","/home/chip/git/chip-tools/switches.py").load_module()
-switches.switches_setup()
+# switches = SourceFileLoader("switches","/home/chip/git/chip-tools/switches.py").load_module()
+# switches.switches_setup()
+
+gifsdir = "/home/chip/headlikeanorange"
 
 from args import args
+
+
 
 if args.paths:
   # path scan back to the argument
