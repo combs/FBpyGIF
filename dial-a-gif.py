@@ -8,6 +8,7 @@ if version_info.major<3 :
 The minimum supported version is Python 3.2')
   exit(1)
 
+from switches import switches
 # switches = SourceFileLoader("switches","/home/chip/git/chip-tools/switches.py").load_module()
 # switches.switches_setup()
 
